@@ -15,6 +15,7 @@
 		26CB8EC12F96F7DB00D3AD95 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CB8EBA2F96F7DB00D3AD95 /* ViewModel.swift */; };
 		26CB8EC22F96F7DB00D3AD95 /* HighScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CB8EB42F96F7DB00D3AD95 /* HighScoreView.swift */; };
 		26CB8EC32F96F7DB00D3AD95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CB8EB72F96F7DB00D3AD95 /* Assets.xcassets */; };
+		26CB8EE02F97573700D3AD95 /* PlayerScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CB8EDF2F97573700D3AD95 /* PlayerScore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		26CB8EB82F96F7DB00D3AD95 /* Bubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bubble.swift; sourceTree = "<group>"; };
 		26CB8EB92F96F7DB00D3AD95 /* BubblePopApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubblePopApp.swift; sourceTree = "<group>"; };
 		26CB8EBA2F96F7DB00D3AD95 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		26CB8EDF2F97573700D3AD95 /* PlayerScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScore.swift; sourceTree = "<group>"; };
 		26DBA81D2F8DFDE70097A34E /* BubblePop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BubblePop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -75,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				26CB8EB82F96F7DB00D3AD95 /* Bubble.swift */,
+				26CB8EDF2F97573700D3AD95 /* PlayerScore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 				26CB8EBE2F96F7DB00D3AD95 /* GameView.swift in Sources */,
 				26CB8EBF2F96F7DB00D3AD95 /* ContentView.swift in Sources */,
 				26CB8EC02F96F7DB00D3AD95 /* BubblePopApp.swift in Sources */,
+				26CB8EE02F97573700D3AD95 /* PlayerScore.swift in Sources */,
 				26CB8EC12F96F7DB00D3AD95 /* ViewModel.swift in Sources */,
 				26CB8EC22F96F7DB00D3AD95 /* HighScoreView.swift in Sources */,
 			);

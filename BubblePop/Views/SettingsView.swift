@@ -9,6 +9,7 @@ import SwiftUI
 //the system requirements dictate user configuration before starting gameplay
 struct SettingsView: View {
     @ObservedObject var viewModel: ViewModel
+    @State private var playerName: String = ""
     
     var body: some View {
         
@@ -16,13 +17,13 @@ struct SettingsView: View {
             Label("Settings", systemImage: "")
                 .foregroundStyle(.green)
                 .font(.title)
-                Spacer()
+            Spacer()
             Text("Enter Your Name:")
             
-            TextField("Enter Name", text: $viewModel.playerName)
+            TextField("Enter Name", text: $playerName)
                 .textFieldStyle(.roundedBorder)
                 .padding()
-                Spacer()
+            Spacer()
             
             //Time setter here
             Text("Game Time: \(Int(viewModel.gameTime)) seconds")
@@ -38,7 +39,10 @@ struct SettingsView: View {
                 Text("Start Game")
                     .padding()
             }
-            .disabled(viewModel.playerName.isEmpty)
+            .disabled(playerName.isEmpty)
+            .simultaneousGesture(TapGesture().onEnded{
+                UserDefaults.standard.set(playerName, forKey: "savedAppUser")
+            })
             Spacer()
         }
     }

@@ -7,10 +7,14 @@
 
 import Foundation
 
-struct Bubble: Identifiable {
-    let id = UUID()
+enum BubbleType: String, Codable, CaseIterable{
+    case red, pink, green, blue, black
+}
+
+struct Bubble: Codable, Identifiable {
+    var id = UUID()
     var x: CGFloat
     var y: CGFloat
-//    var color: Color
+    var type: BubbleType
     var points: Int
 }

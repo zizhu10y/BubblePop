@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var viewModel = ViewModel()
-    
+    @State private var playerName: String = ""
+
     var body: some View {
         NavigationView {
             
@@ -26,7 +27,7 @@ struct ContentView: View {
                 .padding(50)
                 
                 NavigationLink(
-                    destination: HighScoreView(viewModel: viewModel),
+                    destination: HighScoreView(),
                     label: {
                         Text("High Score")
                             .font(.title)
