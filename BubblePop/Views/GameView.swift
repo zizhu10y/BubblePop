@@ -36,42 +36,57 @@ struct GameView: View {
     }
     
     var body: some View {
-        
-        VStack {
-            Label("Game started!", systemImage: "").foregroundStyle(.purple).font(.title)
-            
-            HStack {
-                Spacer()
-                Text("Time Left: \(Int(viewModel.timeRemaining))")
-                Spacer()
-                Text("\(playerName)")
-                Spacer()
-                Text("Score: \(viewModel.score)")
-                Spacer()
-            }
-            .onAppear {
-                viewModel.timeRemaining = viewModel.gameTime
-                playerName = UserDefaults.standard.string(forKey: "savedAppUser") ?? ""
-            }
-            .onReceive(timer) { _ in
-                if viewModel.timeRemaining > 0 {
-                    viewModel.timeRemaining -= 1
-                } else if !isGameFinished{
-                    scoreSaved = true
-                    //随机一个
-                    viewModel.score = Int.random(in: 0...100)
-                    saveScore()
-                    isGameFinished = true
+        GeometryReader { geometry in
+            ZStack {
+                ForEach(viewModel.bubbles) { bubble in
+                    Circle()
+                        .fill(bubble.type.color)
+                        .frame(width: 80, height: 80)
+                        .position(x: bubble.x, y: bubble.y)
+                        .onTapGesture {
+                            viewModel.score += bubble.type.points
+                            viewModel.bubbles.removeAll { $0.id == bubble.id}
+                        }
                 }
-            }
-            Spacer()
-            Button("Finish Game"){
-                scoreSaved = true
-                //随机一个
-                viewModel.timeRemaining = 0
-                viewModel.score = Int.random(in: 0...100)
-                saveScore()
-                isGameFinished = true
+                VStack {
+                    Label("Game started!", systemImage: "").foregroundStyle(.purple).font(.title)
+                    
+                    HStack {
+                        Spacer()
+                        Text("Time Left: \(Int(viewModel.timeRemaining))")
+                        Spacer()
+                        Text("\(playerName)")
+                        Spacer()
+                        Text("Score: \(viewModel.score)")
+                        Spacer()
+                    }
+                    Spacer()
+                    Button("Finish Game"){
+                        scoreSaved = true
+                        //随机一个
+                        viewModel.timeRemaining = 0
+                        viewModel.score = Int.random(in: 0...100)
+                        saveScore()
+                        isGameFinished = true
+                    }
+                }
+                .onAppear {
+                    viewModel.timeRemaining = viewModel.gameTime
+                    playerName = UserDefaults.standard.string(forKey: "savedAppUser") ?? ""
+                    viewModel.generateBubbles(screenWidth: geometry.size.width, screenHeight: geometry.size.height)
+                }
+                .onReceive(timer) { _ in
+                    if viewModel.timeRemaining > 0 {
+                        viewModel.timeRemaining -= 1
+                        viewModel.refreshBubbles(screenWidth: geometry.size.width, screenHeight: geometry.size.height)
+                    } else if !isGameFinished{
+                        scoreSaved = true
+                        //随机一个
+                        viewModel.score = Int.random(in: 0...100)
+                        saveScore()
+                        isGameFinished = true
+                    }
+                }
             }
         }
         .padding()
