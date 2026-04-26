@@ -8,7 +8,7 @@
 import SwiftUI
 //the system requirements dictate user configuration before starting gameplay
 struct SettingsView: View {
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var viewModel: GameViewModel
     @State private var playerName: String = ""
     
     var body: some View {
@@ -27,12 +27,12 @@ struct SettingsView: View {
             
             //Time setter here
             Text("Game Time: \(Int(viewModel.gameTime)) seconds")
-            Slider(value: $viewModel.gameTime, in: 0...60, step: 1)
+            Slider(value: $viewModel.gameTime, in: 10...110, step: 1)
                 .padding()
             //bubble setter
             Text("Max bubbles: \(Int(viewModel.numberOfBubbles))")
                 .padding()
-            Slider(value: $viewModel.numberOfBubbles, in: 1...15, step: 1)
+            Slider(value: $viewModel.numberOfBubbles, in: 1...29, step: 1)
                 .padding()
             
             NavigationLink(destination: GameView(viewModel: viewModel)){
@@ -49,5 +49,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(viewModel: ViewModel())
+    SettingsView(viewModel: GameViewModel())
 }

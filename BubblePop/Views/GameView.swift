@@ -9,31 +9,16 @@ import SwiftUI
 import Combine
 
 struct GameView: View {
-    @ObservedObject var viewModel: ViewModel
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: GameViewModel
     @State private var playerName = ""
+    @State private var bestScore: Int = 0
     @State private var isGameFinished: Bool = false
     @State private var scoreSaved = false
+    @State private var screenSize: CGSize = .zero
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
-    func saveScore() {
-        //Fetch the existing array of data from UserDefaults
-        var currentScores: [PlayerScore] = []
-        if let savedData = UserDefaults.standard.data(forKey: "leaderboardKey"){
-            if let decoded = try? JSONDecoder().decode([PlayerScore].self, from: savedData) {
-                currentScores = decoded
-            }
-            
-        }
-        // 2. Append the new score
-        let newScore = PlayerScore(name: playerName, score: viewModel.score)
-        currentScores.append(newScore)
-        
-        // 3. Encode the updated array back into raw Data and overwrite UserDefaults
-        if let encoded = try? JSONEncoder().encode(currentScores) {
-            UserDefaults.standard.set(encoded, forKey: "leaderboardKey")
-        }
-    }
+    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var timerActive = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -42,10 +27,11 @@ struct GameView: View {
                     Circle()
                         .fill(bubble.type.color)
                         .frame(width: 80, height: 80)
+                        .scaleEffect(bubble.isPopped ? 0 : 1)
+                        .animation(.easeOut(duration: 0.16), value: bubble.isPopped)
                         .position(x: bubble.x, y: bubble.y)
                         .onTapGesture {
-                            viewModel.score += bubble.type.points
-                            viewModel.bubbles.removeAll { $0.id == bubble.id}
+                            viewModel.popBubble(bubble)
                         }
                 }
                 VStack {
@@ -59,44 +45,57 @@ struct GameView: View {
                         Spacer()
                         Text("Score: \(viewModel.score)")
                         Spacer()
+                        Text("Best: \(bestScore)")
+                        Spacer()
                     }
                     Spacer()
                     Button("Finish Game"){
-                        scoreSaved = true
-                        //随机一个
-                        viewModel.timeRemaining = 0
-                        viewModel.score = Int.random(in: 0...100)
-                        saveScore()
-                        isGameFinished = true
+                        if !scoreSaved {
+                            timerActive = false
+                            scoreSaved = true
+                            viewModel.saveScore(playerName: playerName)
+                            isGameFinished = true
+                        }
                     }
                 }
                 .onAppear {
+                    screenSize = geometry.size
                     viewModel.timeRemaining = viewModel.gameTime
+                    viewModel.score = 0
+                    viewModel.lastPoppedType = nil
                     playerName = UserDefaults.standard.string(forKey: "savedAppUser") ?? ""
                     viewModel.generateBubbles(screenWidth: geometry.size.width, screenHeight: geometry.size.height)
-                }
-                .onReceive(timer) { _ in
-                    if viewModel.timeRemaining > 0 {
-                        viewModel.timeRemaining -= 1
-                        viewModel.refreshBubbles(screenWidth: geometry.size.width, screenHeight: geometry.size.height)
-                    } else if !isGameFinished{
-                        scoreSaved = true
-                        //随机一个
-                        viewModel.score = Int.random(in: 0...100)
-                        saveScore()
-                        isGameFinished = true
+                    timerActive = true
+                    
+                    if let savedData = UserDefaults.standard.data(forKey: "leaderboardKey"),
+                       let decoded = try? JSONDecoder().decode([PlayerScore].self, from: savedData) {
+                        bestScore = decoded.map { $0.score }.max() ?? 0
                     }
                 }
             }
         }
+        .onReceive(timer) { _ in
+            guard timerActive else {return}
+            if viewModel.timeRemaining > 0 {
+                viewModel.timeRemaining -= 1
+                viewModel.refreshBubbles(screenWidth: screenSize.width, screenHeight: screenSize.height)
+            } else if !isGameFinished{
+                timerActive = false
+                scoreSaved = true
+                viewModel.saveScore(playerName: playerName)
+                isGameFinished = true
+            }
+        }
         .padding()
-        .sheet(isPresented: $isGameFinished, content: {
-            HighScoreView()
-        })
-        
+        .sheet(isPresented: $isGameFinished) {
+            HighScoreView(onGoHome: {
+                isGameFinished = false
+                dismiss ()
+            })
+        }
     }
 }
 
 #Preview {
-    GameView(viewModel: ViewModel())
+    GameView(viewModel: GameViewModel())
 }

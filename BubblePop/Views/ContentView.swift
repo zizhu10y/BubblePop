@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var viewModel = ViewModel()
+    @StateObject var viewModel = GameViewModel()
     @State private var playerName: String = ""
-
+    
     var body: some View {
         NavigationView {
             

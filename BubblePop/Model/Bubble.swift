@@ -48,4 +48,5 @@ struct Bubble: Codable, Identifiable {
     var x: CGFloat
     var y: CGFloat
     var type: BubbleType
+    var isPopped: Bool = false
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HighScoreView: View {
+    var onGoHome: (() -> Void)? = nil
     @State private var playerScores: [PlayerScore] = []
     var body: some View {
         VStack{
@@ -21,6 +22,10 @@ struct HighScoreView: View {
                     }
                 }
             }
+            Button("Back to Home") {
+                onGoHome?()
+            }
+            .padding()
         }
         .onAppear {
             if let savedData = UserDefaults.standard.data(forKey: "leaderboardKey") {
@@ -28,7 +33,7 @@ struct HighScoreView: View {
                     playerScores = decoded
                 }
             }
-                }
+        }
     }
 }
 
