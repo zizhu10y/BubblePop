@@ -34,7 +34,7 @@ class GameViewModel: ObservableObject {
         var attempts = 0
         while attempts < 20 {
             let x = CGFloat.random(in: radius...(screenWidth - radius))
-            let y = CGFloat.random(in: (radius + 50.0)...(screenHeight - radius - 100.0))
+            let y = CGFloat.random(in: radius...(screenHeight - radius - 100))
             
             let overlaps = existing.contains { bubble in
                 let dx = bubble.x - x
@@ -93,6 +93,17 @@ class GameViewModel: ObservableObject {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) {
             self.bubbles.removeAll{ $0.id == bubble.id}
+        }
+    }
+    
+    func moveBubbles(screenWidth: CGFloat, screenHeight: CGFloat) {
+        let speedMultiplier = 1.0 + (gameTime - timeRemaining) / gameTime * 2.0
+        for idx in bubbles.indices {
+            bubbles[idx].y -= 10.0 * speedMultiplier
+        }
+        
+        bubbles.removeAll {
+            $0.x < radius || $0.x > screenWidth - radius || $0.y < radius || $0.y > screenHeight - radius
         }
     }
     
