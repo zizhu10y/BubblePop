@@ -2,7 +2,7 @@
 //  BubblePopApp.swift
 //  BubblePop
 //
-//  Created by Sarah on 14/4/2026.
+// Finished by Zizhu on 24/4/2026.
 //
 
 import SwiftUI

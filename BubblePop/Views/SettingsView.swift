@@ -2,11 +2,10 @@
 //  SettingsView.swift
 //  BubblePop
 //
-//  Created by Sarah on 17/4/2026.
+// Finished by Zizhu on 24/4/2026.
 //
 
 import SwiftUI
-//the system requirements dictate user configuration before starting gameplay
 struct SettingsView: View {
     @ObservedObject var viewModel: GameViewModel
     @State private var playerName: String = ""

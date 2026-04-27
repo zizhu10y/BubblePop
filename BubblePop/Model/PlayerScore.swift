@@ -2,11 +2,12 @@
 //  PlayerScore.swift
 //  BubblePop
 //
-//  Created by Sarah on 21/4/2026.
+// Finished by Zizhu on 24/4/2026.
 //
 
 import Foundation
 
+// Represents a play's name and their high score
 struct PlayerScore: Codable, Identifiable {
     var id = UUID()
     var name: String

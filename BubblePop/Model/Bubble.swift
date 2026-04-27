@@ -2,13 +2,14 @@
 //  Bubble.swift
 //  BubblePop
 //
-//  Created by Sarah on 21/4/2026.
+// Finished by Zizhu on 24/4/2026.
 //
 
 import Foundation
 import SwiftUI
 
-enum BubbleType: String, Codable, CaseIterable{
+// Defines bubble colours, point values, and spawn probabilities
+enum BubbleType: String, Codable, CaseIterable {
     case red, pink, green, blue, black
     
     var color: Color {
@@ -49,6 +50,4 @@ struct Bubble: Codable, Identifiable {
     var y: CGFloat
     var type: BubbleType
     var isPopped: Bool = false
-    var dx: CGFloat = CGFloat.random(in: -2...2)
-    var dy: CGFloat = CGFloat.random(in: -2...2)
 }

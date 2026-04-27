@@ -2,7 +2,7 @@
 //  GameViewModel.swift
 //  BubblePop
 //
-//  Created by Sarah on 18/4/2026.
+// Finished by Zizhu on 24/4/2026.
 //
 
 import Foundation
@@ -17,7 +17,7 @@ class GameViewModel: ObservableObject {
     
     let radius: CGFloat = 40
     
-    //Choose bubble based on cumulative
+    // Return a random bubble typs based on weighted probability
     func randomBubbleType() -> BubbleType {
         let random = Double.random(in: 0...1)
         var cumulative = 0.0
@@ -30,11 +30,12 @@ class GameViewModel: ObservableObject {
         return .red
     }
     
+    // Place a bubble at a random non-overlapping position
     func placeBubble(screenWidth: CGFloat, screenHeight: CGFloat, existing: [Bubble]) -> Bubble? {
         var attempts = 0
         while attempts < 20 {
             let x = CGFloat.random(in: radius...(screenWidth - radius))
-            let y = CGFloat.random(in: radius...(screenHeight - radius - 100))
+            let y = CGFloat.random(in: radius...(screenHeight - radius - 120))
             
             let overlaps = existing.contains { bubble in
                 let dx = bubble.x - x
@@ -49,6 +50,7 @@ class GameViewModel: ObservableObject {
         return nil
     }
     
+    // Generates the initial set of bubbles
     func generateBubbles(screenWidth: CGFloat, screenHeight: CGFloat) {
         var newBubbles: [Bubble] = []
         
@@ -60,7 +62,7 @@ class GameViewModel: ObservableObject {
         bubbles = newBubbles
     }
     
-    
+    // Refreshes bubbles every second
     func refreshBubbles(screenWidth: CGFloat, screenHeight: CGFloat) {
         guard !bubbles.isEmpty else {
             generateBubbles(screenWidth: screenWidth, screenHeight: screenHeight)
@@ -82,6 +84,7 @@ class GameViewModel: ObservableObject {
         
     }
     
+    // Handles bubble tap: calculates cobo score and trigger pop animation
     func popBubble(_ bubble: Bubble) {
         let isCombo = (lastPoppedType == bubble.type)
         let points = isCombo ? Int((Double(bubble.type.points) * 1.5).rounded())
@@ -96,17 +99,18 @@ class GameViewModel: ObservableObject {
         }
     }
     
+    // Moves all bubbles upward, speed increases as time runs out
     func moveBubbles(screenWidth: CGFloat, screenHeight: CGFloat) {
         let speedMultiplier = 1.0 + (gameTime - timeRemaining) / gameTime * 2.0
         for idx in bubbles.indices {
             bubbles[idx].y -= 10.0 * speedMultiplier
         }
-        
         bubbles.removeAll {
             $0.x < radius || $0.x > screenWidth - radius || $0.y < radius || $0.y > screenHeight - radius
         }
     }
     
+    // Save the player's personal best score to UserDefaults
     func saveScore(playerName: String) {
         // Fetch the existing array of data from UserDefaults
         var currentScores: [PlayerScore] = []
@@ -116,7 +120,7 @@ class GameViewModel: ObservableObject {
             }
             
         }
-        // Append the new score
+        // Update personal best score
         if let idx = currentScores.firstIndex(where: { $0.name == playerName}) {
             if score > currentScores[idx].score {
                 currentScores[idx].score = score

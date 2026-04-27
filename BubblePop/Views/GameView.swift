@@ -2,7 +2,7 @@
 //  GameView.swift
 //  BubblePop
 //
-//  Created by Sarah on 17/4/2026.
+// Finished by Zizhu on 24/4/2026.
 //
 
 import SwiftUI
